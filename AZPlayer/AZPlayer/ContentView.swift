@@ -5,57 +5,49 @@
 //  Created by Anouar Zemouri on 13/02/2025.
 //
 
+import AVKit
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+
+    @StateObject var api = VideoAPI()
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        NavigationView {
+            List(api.videos) { video in
+                NavigationLink(destination: VideoDetail()) {
+                    // Load thumbnail
+                    AsyncImage(url: URL(string: video.thumbnail_url)) { status in
+                        if let image = status.image {
+                            image.resizable()
+                        } else {
+                            ProgressView()
+                        }
                     }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
+                    .frame(width: 80, height: 60)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    Text(video.title)
                 }
             }
-        } detail: {
-            Text("Select an item")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+            .onAppear {
+                Task {
+                    await api.fetchList()
+                }
             }
+            .navigationTitle("Videos")
         }
     }
 }
 
+struct VideoDetail: View {
+    private var url = URL(string: "https://cdndirector.dailymotion.com/cdn/manifest/video/x9dupaw.m3u8?sec=i-met_Mjq_g59j4DfrrkfmNQxRMv9TzhFnlqyQtvywpt2DNjyd9RRAuhK1gY-xf_X_kLUREhgt671s7OfFHeGg&dmTs=643994&dmV1st=0950cc51-80e3-f6f2-f769-ac3ed8c2bb98")!
+    var body: some View {
+        VideoPlayer(player: AVPlayer(url: url))
+            .edgesIgnoringSafeArea(.all)
+    }
+    
+}
+
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
