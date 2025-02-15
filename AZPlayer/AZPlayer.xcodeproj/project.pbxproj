@@ -24,6 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B1A31AAE2D61235800733BDA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B1A510372D5E5E570064A452 /* AZPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AZPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1A510492D5E5E5A0064A452 /* AZPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AZPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1A510532D5E5E5A0064A452 /* AZPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AZPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +76,7 @@
 		B1A5102E2D5E5E570064A452 = {
 			isa = PBXGroup;
 			children = (
+				B1A31AAE2D61235800733BDA /* README.md */,
 				B1A510392D5E5E570064A452 /* AZPlayer */,
 				B1A5104C2D5E5E5A0064A452 /* AZPlayerTests */,
 				B1A510562D5E5E5A0064A452 /* AZPlayerUITests */,
