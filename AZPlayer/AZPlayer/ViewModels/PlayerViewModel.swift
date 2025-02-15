@@ -12,12 +12,15 @@ class PlayerViewModel: ObservableObject {
     private let api: VideoAPIProtocol
 
     @Published var videoURL: String = ""
+    @Published var isPlaying: Bool = false
+    @Published var seekPosition = 0.0
 
     init(video: Video, api: VideoAPIProtocol = VideoAPI()) {
         self.video = video
         self.api = api
     }
 
+    @MainActor
     func fetchMetadata() async{
         guard let url = await api.fetchMetadata(id: video.id) else {
             // Handle error
