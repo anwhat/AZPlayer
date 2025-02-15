@@ -8,18 +8,34 @@
 import Combine
 import Foundation
 
-class VideoAPI: ObservableObject {
+protocol VideoAPIProtocol {
+    func fetchList() async -> [Video]
+}
+
+class VideoAPI: VideoAPIProtocol, ObservableObject {
     @Published var videos: [Video] = []
 
-    func fetchList() async {
-        guard let url = URL(string: "https://api.dailymotion.com/user/alexis.landot/videos?fields=id,title,thumbnail_url,embed_url") else { return }
+    enum URLs: String {
+        case fetchList
+
+        var url: String {
+            switch self {
+                case .fetchList:
+                    "https://api.dailymotion.com/user/alexis.landot/videos?fields=id,title,thumbnail_url,embed_url"
+            }
+        }
+    }
+
+    func fetchList() async -> [Video] {
+        guard let url = URL(string: URLs.fetchList.url) else { return  [] }
 
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             let list = try JSONDecoder().decode(ListVideos.self, from: data)
-            videos = list.list
+            return list.list
         } catch {
             print("Error fetching videos: \(error.localizedDescription)")
+            return []
         }
     }
 }

@@ -5,7 +5,7 @@
 //  Created by Anouar Zemouri on 13/02/2025.
 //
 
-struct Video: Identifiable, Codable {
+struct Video: Identifiable, Codable, Hashable {
     let id: String
     let title: String
     let thumbnail_url: String

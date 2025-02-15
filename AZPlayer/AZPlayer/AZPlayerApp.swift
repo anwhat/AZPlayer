@@ -12,7 +12,8 @@ import SwiftData
 struct AZPlayerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            VideosListView()
+                .environment(Router())
         }
     }
 }
