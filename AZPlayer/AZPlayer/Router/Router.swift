@@ -25,6 +25,6 @@ class Router {
 
     @ViewBuilder
     private func routeToPlayer(video: Video) -> some View {
-        VideoDetail()
+        PlayerView(viewModel: PlayerViewModel(video: video))
     }
 }

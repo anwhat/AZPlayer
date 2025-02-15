@@ -10,6 +10,7 @@ import Foundation
 
 protocol VideoAPIProtocol {
     func fetchList() async -> [Video]
+    func fetchMetadata(id: String) async -> String?
 }
 
 class VideoAPI: VideoAPIProtocol, ObservableObject {
@@ -19,11 +20,14 @@ class VideoAPI: VideoAPIProtocol, ObservableObject {
 
     enum URLs: String {
         case fetchList
+        case fetchMetadata
 
         var url: String {
             switch self {
                 case .fetchList:
                     "https://api.dailymotion.com/user/alexis.landot/videos?fields=id,title,thumbnail_url,embed_url"
+                case .fetchMetadata:
+                    "https://www.dailymotion.com/player/metadata/video/x9d9k6k/@{id}"
             }
         }
     }
@@ -42,6 +46,21 @@ class VideoAPI: VideoAPIProtocol, ObservableObject {
         } catch {
             print("Error fetching videos: \(error.localizedDescription)")
             return []
+        }
+    }
+
+    func fetchMetadata(id: String) async -> String? {
+        guard let url = URL(string: URLs.fetchMetadata.url.replacingOccurrences(of: "@{id}", with: id)) else {
+            return nil
+        }
+
+        do {
+            let (data, _) = try await session.data(from: url)
+            let metadata = try JSONDecoder().decode(VideoMetadata.self, from: data)
+            return metadata.url
+        } catch {
+            print("Error fetching metadata: \(error.localizedDescription)")
+            return nil
         }
     }
 }
