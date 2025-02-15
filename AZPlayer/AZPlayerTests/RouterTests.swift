@@ -26,8 +26,8 @@ final class RouterTests: XCTestCase {
         let video = Video(
             id: "1",
             title: "Test Video",
-            thumbnail_url: "https://test.com/thumbnail.jpg",
-            embed_url: "https://test.com/embed_url"
+            thumbnailUrl: "https://test.com/thumbnail.jpg",
+            embedUrl: "https://test.com/embed_url"
         )
         let route = Route.player(video)
 

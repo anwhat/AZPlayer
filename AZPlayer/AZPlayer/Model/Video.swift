@@ -8,6 +8,13 @@
 struct Video: Identifiable, Codable, Hashable {
     let id: String
     let title: String
-    let thumbnail_url: String
-    let embed_url: String
+    let thumbnailUrl: String
+    let embedUrl: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case thumbnailUrl = "thumbnail_url"
+        case embedUrl = "embed_url"
+    }
 }

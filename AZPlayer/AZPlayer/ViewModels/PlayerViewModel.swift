@@ -14,6 +14,7 @@ class PlayerViewModel: ObservableObject {
     @Published var videoURL: String = ""
     @Published var isPlaying: Bool = false
     @Published var seekPosition = 0.0
+    @Published var error: String? = nil
 
     init(video: Video, api: VideoAPIProtocol = VideoAPI()) {
         self.video = video
@@ -21,9 +22,9 @@ class PlayerViewModel: ObservableObject {
     }
 
     @MainActor
-    func fetchMetadata() async{
+    func fetchMetadata() async {
         guard let url = await api.fetchMetadata(id: video.id) else {
-            // Handle error
+            error = "Error while fetching video"
             return
         }
         videoURL = url

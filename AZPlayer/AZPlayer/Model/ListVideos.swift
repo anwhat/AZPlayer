@@ -9,6 +9,14 @@ struct ListVideos: Codable {
     let page: Int
     let limit: Int
     let total: Int
-    let has_more: Bool
+    let hasMore: Bool
     let list: [Video]
+
+    enum CodingKeys: String, CodingKey {
+        case page
+        case limit
+        case total
+        case hasMore = "has_more"
+        case list
+    }
 }

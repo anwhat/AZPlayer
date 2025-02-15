@@ -29,14 +29,14 @@ final class VideosListViewModelTests: XCTestCase {
             Video(
                 id: "1",
                 title: "Video 1",
-                thumbnail_url: "https://test.com/1.jpg",
-                embed_url: "https://test.com/1"
+                thumbnailUrl: "https://test.com/1.jpg",
+                embedUrl: "https://test.com/1"
             ),
             Video(
                 id: "2",
                 title: "Video 2",
-                thumbnail_url: "https://test.com/2.jpg",
-                embed_url: "https://test.com/2"
+                thumbnailUrl: "https://test.com/2.jpg",
+                embedUrl: "https://test.com/2"
             )
         ]
         mockAPI.mockVideos = mock

@@ -17,72 +17,73 @@ struct PlayerView: View {
     }
 
     var body: some View {
-        Group {
-            if let player = player {
-                VideoPlayer(player: player)
-                    .aspectRatio(16/9, contentMode: .fit)
-                    .onAppear {
-                        NotificationCenter.default.addObserver(
-                            forName: .AVPlayerItemDidPlayToEndTime,
-                            object: player.currentItem,
-                            queue: .main) { _ in
-                                player.seek(to: .zero)
-                                player.pause()
-                                viewModel.isPlaying = false
-                            }
-                    }
-                    .onDisappear {
-                        player.pause()
-                        NotificationCenter.default.removeObserver(self)
-                    }
-                    .overlay(
-                        Group {
-                            if !viewModel.isPlaying {
-                                Button {
-                                    player.play()
-                                    viewModel.isPlaying = true
-                                } label: {
-                                    Image(systemName: "play.circle.fill")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundColor(.white)
-                                        .opacity(0.8)
+        if let error = viewModel.error {
+            Text(error)
+        } else {
+            Group {
+                if let player = player {
+                    VideoPlayer(player: player)
+                        .onAppear {
+                            NotificationCenter.default.addObserver(
+                                forName: .AVPlayerItemDidPlayToEndTime,
+                                object: player.currentItem,
+                                queue: .main) { _ in
+                                    player.seek(to: .zero)
+                                    player.pause()
+                                    viewModel.isPlaying = false
+                                }
+                        }
+                        .onDisappear {
+                            player.pause()
+                            NotificationCenter.default.removeObserver(self)
+                        }
+                        .overlay(
+                            Group {
+                                if !viewModel.isPlaying {
+                                    Button {
+                                        player.play()
+                                        viewModel.isPlaying = true
+                                    } label: {
+                                        Image(systemName: "play.circle.fill")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundColor(.white)
+                                            .opacity(0.8)
+                                    }
                                 }
                             }
-                        }
-                    )
-
-
-            } else {
-                ProgressView()
+                        )
+                } else {
+                    ProgressView()
+                }
             }
-        }
-        .onReceive(viewModel.$videoURL) { url in
-            if let url = URL(string: url) {
-                player = AVPlayer(url: url)
+            .onReceive(viewModel.$videoURL) { url in
+                if let url = URL(string: url) {
+                    player = AVPlayer(url: url)
 
-                player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: 600), queue: nil) { time in
+                    player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: 600), queue: nil) { time in
+                        guard let item = self.player?.currentItem else {
+                            return
+                        }
+                        self.viewModel.seekPosition = time.seconds / item.duration.seconds
+                    }
+                }
+            }
+            .task {
+                await viewModel.fetchMetadata()
+            }
+
+            Slider(
+                value: $viewModel.seekPosition,
+                in: 0.0...1.0,
+                onEditingChanged: { _ in
                     guard let item = self.player?.currentItem else {
                         return
                     }
-                    self.viewModel.seekPosition = time.seconds / item.duration.seconds
+                    let targetTime = self.viewModel.seekPosition * item.duration.seconds
+                    self.player?.seek(to: CMTime(seconds: targetTime, preferredTimescale: 600))
                 }
-            }
+            )
         }
-        .task {
-            await viewModel.fetchMetadata()
-        }
-
-        Slider(
-            value: $viewModel.seekPosition,
-            in: 0.0...1.0,
-            onEditingChanged: { _ in
-                guard let item = self.player?.currentItem else {
-                    return
-                }
-                let targetTime = self.viewModel.seekPosition * item.duration.seconds
-                self.player?.seek(to: CMTime(seconds: targetTime, preferredTimescale: 600))
-            }
-        )
     }
 }
