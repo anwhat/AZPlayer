@@ -14,7 +14,7 @@ protocol VideoAPIProtocol {
 }
 
 class VideoAPI: VideoAPIProtocol, ObservableObject {
-    private let session: URLSession
+    private let session: URLSessionProtocol
 
     @Published var videos: [Video] = []
 
@@ -32,7 +32,7 @@ class VideoAPI: VideoAPIProtocol, ObservableObject {
         }
     }
 
-    init(session: URLSession = .shared) {
+    init(session: URLSessionProtocol = URLSession.shared) {
         self.session = session
     }
 

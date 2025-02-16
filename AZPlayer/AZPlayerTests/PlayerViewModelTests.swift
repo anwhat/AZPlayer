@@ -33,16 +33,16 @@ final class PlayerViewModelTests: XCTestCase {
     }
 
     func testFetchMetadataSuccess() async {
-        mockAPI.mockMetadata = "https://test.com/embed_url"
+        mockAPI.metadata = "https://test.com/embed_url"
 
         await viewModel.fetchMetadata()
 
         XCTAssertNil(viewModel.error)
-        XCTAssertEqual(viewModel.videoURL, mockAPI.mockMetadata!)
+        XCTAssertEqual(viewModel.videoURL, mockAPI.metadata!)
     }
 
     func testFetchMetadataFailure() async {
-        mockAPI.mockMetadata = nil
+        mockAPI.metadata = nil
 
         await viewModel.fetchMetadata()
 

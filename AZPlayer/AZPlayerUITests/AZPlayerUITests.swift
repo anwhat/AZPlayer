@@ -18,7 +18,6 @@ final class AZPlayerUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        
     }
 
 }

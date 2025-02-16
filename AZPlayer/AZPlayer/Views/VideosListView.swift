@@ -36,6 +36,7 @@ struct VideosListView: View {
 
                         Text(video.title)
                             .foregroundStyle(Color.primary)
+
                         Spacer()
                         Image(systemName: "chevron.right")
                             .foregroundStyle(Color.primary)
@@ -45,7 +46,6 @@ struct VideosListView: View {
             .navigationDestination(for: Route.self) { route in
                 router.destination(for: route)
             }
-
             .navigationTitle("Videos")
         }
         .task {

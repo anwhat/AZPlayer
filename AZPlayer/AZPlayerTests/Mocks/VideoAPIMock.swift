@@ -8,14 +8,14 @@
 @testable import AZPlayer
 
 class VideoAPIMock: VideoAPIProtocol {
-    var mockVideos: [Video] = []
-    var mockMetadata: String? = nil
+    var videos: [Video] = []
+    var metadata: String? = nil
 
     func fetchList() async -> [Video] {
-        mockVideos
+        videos
     }
 
     func fetchMetadata(id: String) async -> String? {
-        mockMetadata
+        metadata
     }
 }

@@ -35,7 +35,9 @@ struct PlayerView: View {
                         }
                         .onDisappear {
                             player.pause()
+                            player.replaceCurrentItem(with: nil)
                             NotificationCenter.default.removeObserver(self)
+                            self.player = nil
                         }
                         .overlay(
                             Group {
@@ -44,7 +46,7 @@ struct PlayerView: View {
                                         player.play()
                                         viewModel.isPlaying = true
                                     } label: {
-                                        Image(systemName: "play.circle.fill")
+                                        Image(systemName: "play.circle")
                                             .resizable()
                                             .frame(width: 50, height: 50)
                                             .foregroundColor(.white)
@@ -60,8 +62,10 @@ struct PlayerView: View {
             .onReceive(viewModel.$videoURL) { url in
                 if let url = URL(string: url) {
                     player = AVPlayer(url: url)
-
-                    player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.5, preferredTimescale: 600), queue: nil) { time in
+                    player?.addPeriodicTimeObserver(
+                        forInterval: CMTime(seconds: 0.2, preferredTimescale: 600),
+                        queue: nil
+                    ) { time in
                         guard let item = self.player?.currentItem else {
                             return
                         }
@@ -73,6 +77,7 @@ struct PlayerView: View {
                 await viewModel.fetchMetadata()
             }
 
+            /// Seekbar
             Slider(
                 value: $viewModel.seekPosition,
                 in: 0.0...1.0,

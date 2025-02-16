@@ -39,7 +39,7 @@ final class VideosListViewModelTests: XCTestCase {
                 embedUrl: "https://test.com/2"
             )
         ]
-        mockAPI.mockVideos = mock
+        mockAPI.videos = mock
 
         await viewModel.fetchVideos()
 
@@ -49,7 +49,7 @@ final class VideosListViewModelTests: XCTestCase {
     }
 
     func testFetchVideosFailure() async {
-        mockAPI.mockVideos = []
+        mockAPI.videos = []
 
         await viewModel.fetchVideos()
 
